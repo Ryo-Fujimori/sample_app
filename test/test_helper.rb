@@ -12,7 +12,8 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   # 指定のワーカー数でテストを並列実行する
   fixtures :all
-
+  include ApplicationHelper
+  
   # Add more helper methods to be used by all tests here...
   # （すべてのテストで使うその他のヘルパーメソッドは省略）
 end
