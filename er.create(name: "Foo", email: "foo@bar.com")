@@ -1,0 +1,19 @@
+=> 
+[[32m#<User:0x0000719beee6d718[0m
+  id: [34m[1m1[0m,
+  name: [31m[1m"[0m[31mMichael Hartl[0m[31m[1m"[0m,
+  email: [31m[1m"[0m[31mmichael@example.com[0m[31m[1m"[0m,
+  created_at: Sat, 23 Nov 2024 13:45:42.013192000 UTC +00:00,
+  updated_at: Sat, 23 Nov 2024 13:45:42.013192000 UTC +00:00[32m>[0m,
+ [32m#<User:0x0000719beee6d5d8[0m
+  id: [34m[1m2[0m,
+  name: [31m[1m"[0m[31mA Nother[0m[31m[1m"[0m,
+  email: [31m[1m"[0m[31manother@example.org[0m[31m[1m"[0m,
+  created_at: Sat, 23 Nov 2024 13:46:16.448166000 UTC +00:00,
+  updated_at: Sat, 23 Nov 2024 13:46:16.448166000 UTC +00:00[32m>[0m,
+ [32m#<User:0x0000719beee6d498[0m
+  id: [34m[1m3[0m,
+  name: [31m[1m"[0m[31mFoo[0m[31m[1m"[0m,
+  email: [31m[1m"[0m[31mfoo@bar.com[0m[31m[1m"[0m,
+  created_at: Sat, 23 Nov 2024 13:46:28.206208000 UTC +00:00,
+  updated_at: Sat, 23 Nov 2024 13:46:28.206208000 UTC +00:00[32m>[0m]
