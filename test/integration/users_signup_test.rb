@@ -14,21 +14,6 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                          password_confirmation: "bar" } }
     end
 
-    # 正しくユーザー登録、画面のリダイレクトが行われているかテスト
-    test "valid signup information" do
-      # ユーザー数が1だけ差があればOK
-      assert_difference 'User.count', 1 do
-        post users_path, params: { user: { name:  "Example User",
-                                           email: "user@example.com",
-                                           password:              "password",
-                                           password_confirmation: "password" } }
-      end
-      # 途中で指定されたリダイレクト先に移動するメソッド
-      follow_redirect!
-      # 指定テンプレートが表示されているかテスト
-      assert_template 'users/show'
-    end
-
     #422 Unprocessable Entity　ステータスコードを返しているかテスト
     assert_response :unprocessable_entity
     #/users/new.html.erbが描画されているかどうかを検証する
@@ -36,4 +21,22 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_select 'div#error_explanation'
     assert_select 'div.alert'
   end
+
+      # 正しくユーザー登録、画面のリダイレクトが行われているかテスト
+      test "valid signup information" do
+        # ユーザー数が1だけ差があればOK
+        assert_difference 'User.count', 1 do
+          post users_path, params: { user: { name:  "Example User",
+                                             email: "user@example.com",
+                                             password:              "password",
+                                             password_confirmation: "password" } }
+        end
+        # 途中で指定されたリダイレクト先に移動するメソッド
+        follow_redirect!
+        # 指定テンプレートが表示されているかテスト
+        assert_template 'users/show'
+
+        assert_not flash.empty?
+      end
+  
 end
