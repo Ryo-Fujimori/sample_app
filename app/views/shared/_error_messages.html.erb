@@ -1,0 +1,14 @@
+<% if @user.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+     <%# @user.errorsのエラーの数を返せ。エラーが複数の場合は複数形にせよ（pluralizeヘルパーの機能） %>
+      The form contains <%= pluralize(@user.errors.count, "error") %>.
+    </div>
+    <ul>
+    <%# @user.errorsのエラーメッセージを1つずつmsgに代入せよ %>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
