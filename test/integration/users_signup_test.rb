@@ -37,6 +37,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
         assert_template 'users/show'
 
         assert_not flash.empty?
+        # ログイン状態かどうかテスト
+        assert is_logged_in?
       end
   
 end

@@ -13,6 +13,11 @@ class ActiveSupport::TestCase
   # 指定のワーカー数でテストを並列実行する
   fixtures :all
   include ApplicationHelper
+
+  # テストユーザーがログイン中の場合にtrueを返す
+  def is_logged_in?
+    !session[:user_id].nil?
+  end
   
   # Add more helper methods to be used by all tests here...
   # （すべてのテストで使うその他のヘルパーメソッドは省略）
