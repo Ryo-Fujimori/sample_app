@@ -10,6 +10,8 @@ class SessionsController < ApplicationController
       # 2: sessionヘルパーのログインメソッドを起動
       # 3: user画面に移動
       reset_session      # ログインの直前に必ずこれを書くこと
+      #remember meチェックボックスにチェックを入れていたならrememberメソッド
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       log_in user
       # ローカル変数を渡しているが『redirect_to user_url(user)』と同じ処理
       redirect_to user
@@ -20,7 +22,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    log_out
+    #logged_inがtrueの場合のみlog_outを呼び出す
+    log_out if logged_in?
     redirect_to root_url, status: :see_other
   end
 end
