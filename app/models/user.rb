@@ -9,7 +9,7 @@ class User < ApplicationRecord
                     uniqueness: true
   has_secure_password
 
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
   class << self
     # 渡された文字列のハッシュ値を返す
@@ -34,6 +34,13 @@ class User < ApplicationRecord
     self.remember_token = User.new_token
     # 　渡したトークンをもとにダイジェストを作成、保存する
     update_attribute(:remember_digest, User.digest(remember_token))
+    remember_digest
+  end
+
+  # セッションハイジャック防止のためにセッショントークンを返す
+  # この記憶ダイジェストを再利用しているのは単に利便性のため
+  def session_token
+    remember_digest || remember
   end
 
   # 渡されたトークンがDBのダイジェストと一致したらtrueを返す
