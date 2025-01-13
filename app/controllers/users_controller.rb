@@ -19,10 +19,11 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save #保存が成功してtrueを返した場合
-      reset_session
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_to @user #user_url(@user)にリダイレクトする
+      # reset_session
+      # log_in @user
+      UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
     else
       #user.saveがfalseを返す場合
       render 'new', status: :unprocessable_entity

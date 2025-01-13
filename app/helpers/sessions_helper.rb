@@ -30,7 +30,7 @@ module SessionsHelper
         if user && session[:session_token] == user.session_token
           @current_user = user
         end
-        if user && user.authenticated?(cookies[:remember_token])
+        if user && user.authenticated?(:remember,cookies[:remember_token])
           log_in user
           @current_user = user
         end
