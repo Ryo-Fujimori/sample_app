@@ -1,44 +1,73 @@
 require "test_helper"
 
-class UsersSignupTest < ActionDispatch::IntegrationTest
+class UsersSignup < ActionDispatch::IntegrationTest
+
+  def setup
+    ActionMailer::Base.deliveries.clear
+  end
+end
+
+class UsersSignupTest < UsersSignup
 
   test "invalid signup information" do
-    # サインアップの画面にアクセスできるかテスト
-    get signup_path
-    # ユーザ数が変わらないかどうかを検証するテスト
-    # assert_no_difference :ブロック実行前後でexpressionsの値が変わっていなければ成功
     assert_no_difference 'User.count' do
       post users_path, params: { user: { name:  "",
                                          email: "user@invalid",
                                          password:              "foo",
                                          password_confirmation: "bar" } }
     end
-
-    #422 Unprocessable Entity　ステータスコードを返しているかテスト
     assert_response :unprocessable_entity
-    #/users/new.html.erbが描画されているかどうかを検証する
     assert_template 'users/new'
     assert_select 'div#error_explanation'
-    assert_select 'div.alert'
+    assert_select 'div.field_with_errors'
   end
 
-      # 正しくユーザー登録、画面のリダイレクトが行われているかテスト
-      test "valid signup information" do
-        # ユーザー数が1だけ差があればOK
-        assert_difference 'User.count', 1 do
-          post users_path, params: { user: { name:  "Example User",
-                                             email: "user@example.com",
-                                             password:              "password",
-                                             password_confirmation: "password" } }
-        end
-        # 途中で指定されたリダイレクト先に移動するメソッド
-        follow_redirect!
-        # 指定テンプレートが表示されているかテスト
-        #assert_template 'users/show'
+  test "valid signup information with account activation" do
+    assert_difference 'User.count', 1 do
+      post users_path, params: { user: { name:  "Example User",
+                                         email: "user@example.com",
+                                         password:              "password",
+                                         password_confirmation: "password" } }
+    end
+    assert_equal 1, ActionMailer::Base.deliveries.size
+  end
+end
 
-        assert_not flash.empty?
-        # ログイン状態かどうかテスト
-        #assert is_logged_in?
-      end
-  
+class AccountActivationTest < UsersSignup
+
+  def setup
+    super
+    post users_path, params: { user: { name:  "Example User",
+                                       email: "user@example.com",
+                                       password:              "password",
+                                       password_confirmation: "password" } }
+    @user = assigns(:user)
+  end
+
+  test "should not be activated" do
+    assert_not @user.activated?
+  end
+
+  test "should not be able to log in before account activation" do
+    log_in_as(@user)
+    assert_not is_logged_in?
+  end
+
+  test "should not be able to log in with invalid activation token" do
+    get edit_account_activation_path("invalid token", email: @user.email)
+    assert_not is_logged_in?
+  end
+
+  test "should not be able to log in with invalid email" do
+    get edit_account_activation_path(@user.activation_token, email: 'wrong')
+    assert_not is_logged_in?
+  end
+
+  test "should log in successfully with valid activation token and email" do
+    get edit_account_activation_path(@user.activation_token, email: @user.email)
+    assert @user.reload.activated?
+    follow_redirect!
+    assert_template 'users/show'
+    assert is_logged_in?
+  end
 end
